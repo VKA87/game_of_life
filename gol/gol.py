@@ -5,6 +5,9 @@ class GameOfLife(object):
     def __init__(self, init_state):
         self.state = init_state
 
+    def get_state(self):
+        return self.state
+
     def update_state(self):
         self.state = self.get_next_state()
 
@@ -15,9 +18,6 @@ class GameOfLife(object):
         ix_2 = (live_neighbours == 3) & (self.state == 0)
         next_state[ix_1 | ix_2] = 1
         return next_state
-
-    def get_state(self):
-        return self.state
 
     def _get_number_of_neighbouring_live_cells(self):
         number_of_life_cells = np.zeros(self.state.shape)
