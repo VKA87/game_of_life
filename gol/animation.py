@@ -36,7 +36,6 @@ def white_fill(i, j, ax):
 
 
 def color_boxes(state, patches):
-    state = state.astype(bool)
     n, m = state.shape
     for i in range(n):
         for j in range(m):
