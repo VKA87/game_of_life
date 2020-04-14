@@ -83,4 +83,3 @@ def test_gol_update_state(init_state, expected):
     gol = GameOfLife(init_state)
     gol.update_state()
     assert np.allclose(gol.get_state(), expected)
-

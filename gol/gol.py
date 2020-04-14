@@ -21,6 +21,10 @@ class GameOfLife(object):
         n, m = self.state.shape
         for i in range(n):
             for j in range(m):
-                neigh = [self.state[a%n, b%m] for a in range(i-1, i+2) for b in range(j-1, j+2)]
-                number_of_life_cells[i, j] = np.sum(neigh) - self.state[i][j]
+                neighbours = self._get_neighbour(i, j)
+                number_of_life_cells[i, j] = np.sum(neighbours) - self.state[i][j]
         return number_of_life_cells
+
+    def _get_neighbour(self, i, j):
+        n, m = self.state.shape
+        return [self.state[a%n, b%m] for a in range(i-1, i+2) for b in range(j-1, j+2)]
