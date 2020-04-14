@@ -1,4 +1,5 @@
 import numpy as np
+import pytest
 
 from gol.gol import GameOfLife
 
@@ -12,7 +13,7 @@ def test_gol_inial_sate():
     assert np.allclose(gol.get_state(), init_state)
 
 
-def test_gol_update_state():
+def test_gol_number_of_life_cells():
     init_state = np.array([
         [1, 0, 1],
         [0, 1, 0],
@@ -25,3 +26,61 @@ def test_gol_update_state():
         [4, 3, 4],
         [4, 3, 4]])
     assert np.allclose(num_life_cells, expected)
+
+
+update_args = [
+        (np.array([[0, 0, 0, 0],
+                   [0, 0, 1, 0],
+                   [0, 0, 0, 0],
+                   [0, 0, 0, 0]]),
+         np.array([[0, 0, 0, 0],
+                   [0, 0, 0, 0],
+                   [0, 0, 0, 0],
+                   [0, 0, 0, 0]])),
+
+        (np.array([[0, 0, 0, 0],
+                   [0, 1, 1, 0],
+                   [0, 0, 0, 0],
+                   [0, 0, 0, 0]]),
+         np.array([[0, 0, 0, 0],
+                   [0, 0, 0, 0],
+                   [0, 0, 0, 0],
+                   [0, 0, 0, 0]])),
+
+        (np.array([[0, 0, 0, 0],
+                   [0, 1, 1, 0],
+                   [0, 0, 1, 0],
+                   [0, 0, 0, 0]]),
+         np.array([[0, 0, 0, 0],
+                   [0, 1, 1, 0],
+                   [0, 1, 1, 0],
+                   [0, 0, 0, 0]])),
+
+        (np.array([[0, 0, 0, 0],
+                   [0, 1, 1, 0],
+                   [0, 0, 1, 0],
+                   [0, 0, 0, 0]]),
+         np.array([[0, 0, 0, 0],
+                   [0, 1, 1, 0],
+                   [0, 1, 1, 0],
+                   [0, 0, 0, 0]])),
+
+        (np.array([[0, 0, 0, 0, 0],
+                   [0, 0, 1, 1, 0],
+                   [0, 0, 1, 1, 0],
+                   [0, 0, 0, 1, 0],
+                   [0, 0, 0, 0, 0]]),
+         np.array([[0, 0, 0, 0, 0],
+                   [0, 0, 1, 1, 0],
+                   [0, 0, 0, 0, 1],
+                   [0, 0, 1, 1, 0],
+                   [0, 0, 0, 0, 0]]))
+         ]
+
+
+@pytest.mark.parametrize('init_state, expected', update_args)
+def test_gol_update_state(init_state, expected):
+    gol = GameOfLife(init_state)
+    gol.update_state()
+    assert np.allclose(gol.get_state(), expected)
+
