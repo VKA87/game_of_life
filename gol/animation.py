@@ -8,13 +8,6 @@ plt.style.use('seaborn-pastel')
 from gol.gol import GameOfLife
 
 
-def black_fill(i, j, ax):
-    x = (i - 0.5, i - 0.5, i + 0.5, i + 0.5)
-    y = (j - 0.5, j + 0.5, j + 0.5, j - 0.5)
-    f = ax.fill(x, y, color='black')
-    return f[0]
-
-
 def white_fill(i, j, ax):
     x = (i - 0.5, i - 0.5, i + 0.5, i + 0.5)
     y = (j - 0.5, j + 0.5, j + 0.5, j - 0.5)
@@ -35,18 +28,18 @@ def color_boxes(state, patches):
 
 def get_next_step(init_state):
     gol = GameOfLife(init_state)
-    for _ in range(1000000):
+    while True:
         yield gol.get_state()
         gol.update_state()
 
 
-def create_animation(init_state, speed=200):
+def create_animation(init_state, interval=200, n_frames=1000):
     fig = plt.figure()
     imax, jmax = init_state.shape
     ax = plt.axes(xlim=(-0.5, imax + 0.5), ylim=(-0.5, jmax + 0.5))
     ax.set_axis_off()
     patches = [[white_fill(i, j, ax) for i in range(imax)] for j in range(jmax)]
     frame_func = partial(get_next_step, init_state=init_state)
-    anim = FuncAnimation(fig, partial(color_boxes, patches=patches),
-                              frames=frame_func, interval=speed, blit=True)
+    anim = FuncAnimation(fig, partial(color_boxes, patches=patches), frames=frame_func,
+                              interval=interval, blit=True, save_count=n_frames)
     return anim
