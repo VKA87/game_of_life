@@ -13,18 +13,18 @@ class GameOfLife(object):
 
     def get_next_state(self):
         next_state = np.zeros(self.state.shape).astype(int)
-        live_neighbours = self._get_number_of_neighbouring_live_cells()
+        live_neighbours = self._get_live_neighbours_count()
         ix_1 = ((live_neighbours == 2) | (live_neighbours == 3)) & (self.state == 1)
         ix_2 = (live_neighbours == 3) & (self.state == 0)
         next_state[ix_1 | ix_2] = 1
         return next_state
 
-    def _get_number_of_neighbouring_live_cells(self):
+    def _get_live_neighbours_count(self):
         n, m = self.state.shape
-        res = [[self._live_cells_count(i, j) for j in range(m)] for i in range(n)]
+        res = [[self._cell_live_neighbours_count(i, j) for j in range(m)] for i in range(n)]
         return np.array(res)
 
-    def _live_cells_count(self, i, j):
+    def _cell_live_neighbours_count(self, i, j):
         n, m = self.state.shape
         values = 0
         for a in range(i -1, i+2):
