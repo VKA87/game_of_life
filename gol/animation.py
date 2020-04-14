@@ -1,11 +1,31 @@
 from functools import partial
 
-import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib.animation import FuncAnimation
-plt.style.use('seaborn-pastel')
+import numpy as np
 
-from gol.gol import GameOfLife
+from .gol import GameOfLife
+
+
+def create_animation(init_state, interval=200, n_frames=1000):
+    fig = plt.figure()
+    plt.xticks([])
+    plt.yticks([])
+    imax, jmax = init_state.shape
+    ax = plt.axes(xlim=(-0.5, imax + 0.5), ylim=(-0.5, jmax + 0.5))
+    _add_border(ax, imax, jmax)
+    patches = [[white_fill(i, j, ax) for i in range(imax)] for j in range(jmax)]
+    frame_func = partial(get_next_step, init_state=init_state)
+    anim = FuncAnimation(fig, partial(color_boxes, patches=patches), frames=frame_func,
+                              interval=interval, blit=True, save_count=n_frames)
+    return anim
+
+def _add_border(ax, imax, jmax):
+    ax.set_axis_off()
+    ax.plot([-0.5, -0.5], [-0.5, jmax-0.5], color='black')
+    ax.plot([imax-0.5, imax-0.5], [-0.5, jmax-0.5], color='black')
+    ax.plot([-0.5, imax-0.5], [-0.5, -0.5], color='black')
+    ax.plot([-0.5, imax-0.5], [jmax-0.5, jmax-0.5], color='black')
 
 
 def white_fill(i, j, ax):
@@ -31,15 +51,3 @@ def get_next_step(init_state):
     while True:
         yield gol.get_state()
         gol.update_state()
-
-
-def create_animation(init_state, interval=200, n_frames=1000):
-    fig = plt.figure()
-    imax, jmax = init_state.shape
-    ax = plt.axes(xlim=(-0.5, imax + 0.5), ylim=(-0.5, jmax + 0.5))
-    ax.set_axis_off()
-    patches = [[white_fill(i, j, ax) for i in range(imax)] for j in range(jmax)]
-    frame_func = partial(get_next_step, init_state=init_state)
-    anim = FuncAnimation(fig, partial(color_boxes, patches=patches), frames=frame_func,
-                              interval=interval, blit=True, save_count=n_frames)
-    return anim
