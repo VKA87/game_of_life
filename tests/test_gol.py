@@ -3,14 +3,23 @@ import pytest
 
 from gol.gol import GameOfLife
 
-def test_gol_inial_sate():
+
+def test_gol_initial_state():
     init_state = np.array([
         [1, 0, 1],
         [0, 1, 0],
         [0, 1, 0]])
-
     gol = GameOfLife(init_state)
     assert np.allclose(gol.get_state(), init_state)
+
+
+def test_gol_raises_for_invalid_initial_state():
+    init_state = np.array([
+        [1, 0, 1.4],
+        [0, 1, 0],
+        [0, 10, 0]])
+    with pytest.raises(ValueError):
+        GameOfLife(init_state)
 
 
 def test_gol_number_of_live_cells():

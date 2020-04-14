@@ -3,7 +3,14 @@ import numpy as np
 class GameOfLife(object):
 
     def __init__(self, init_state):
+        self._check_init_state(init_state)
         self.state = init_state.astype(bool)
+
+    def _check_init_state(self, init_state):
+        init_state = init_state.astype(float)
+        ix = (init_state == 0.) | (init_state == 1.)
+        if not ix.all():
+            raise ValueError("initial state must be boolean or contains only 0 and 1")
 
     def get_state(self):
         return self.state
