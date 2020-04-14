@@ -20,14 +20,11 @@ class GameOfLife(object):
         return next_state
 
     def _get_number_of_neighbouring_live_cells(self):
-        number_of_live_cells = np.zeros(self.state.shape)
         n, m = self.state.shape
-        for i in range(n):
-            for j in range(m):
-                number_of_live_cells[i, j] = self._get_neighbouring_cell_values(i, j)
-        return number_of_live_cells
+        res = [[self._live_cells_count(i, j) for j in range(m)] for i in range(n)]
+        return np.array(res)
 
-    def _get_neighbouring_cell_values(self, i, j):
+    def _live_cells_count(self, i, j):
         n, m = self.state.shape
         values = 0
         for a in range(i -1, i+2):
