@@ -13,14 +13,14 @@ def test_gol_inial_sate():
     assert np.allclose(gol.get_state(), init_state)
 
 
-def test_gol_number_of_life_cells():
+def test_gol_number_of_live_cells():
     init_state = np.array([
         [1, 0, 1],
         [0, 1, 0],
         [0, 1, 0]])
 
     gol = GameOfLife(init_state)
-    num_life_cells = gol._get_number_of_life_cells()
+    num_life_cells = gol._get_number_of_neighbouring_live_cells()
     expected = np.array([
         [3, 4, 3],
         [4, 3, 4],
