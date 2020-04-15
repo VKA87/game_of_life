@@ -2,9 +2,10 @@ import numpy as np
 
 class GameOfLife(object):
 
-    def __init__(self, init_state):
+    def __init__(self, init_state, cyclic=False):
         self._check_init_state(init_state)
         self.state = init_state.astype(bool)
+        self.cyclic = cyclic
 
     def _check_init_state(self, init_state):
         init_state = init_state.astype(float)
@@ -32,9 +33,24 @@ class GameOfLife(object):
         return np.array(res)
 
     def _cell_live_neighbours_count(self, i, j):
+        if self.cyclic:
+            num_live_neighbours = self._cell_live_neighbours_count_cyclic(i, j)
+        else:
+            num_live_neighbours = self._cell_live_neighbours_count_not_cyclic(i, j)
+        return num_live_neighbours
+
+    def _cell_live_neighbours_count_cyclic(self, i, j):
         n, m = self.state.shape
         values = 0
         for a in range(i -1, i+2):
             for b in range(j-1, j+2):
                 values += self.state[a%n, b%m]
         return values - self.state[i, j]
+
+    def _cell_live_neighbours_count_not_cyclic(self, i, j):
+        n, m = self.state.shape
+        i_min = max(i-1, 0)
+        i_max = min(i+1, n) + 1
+        j_min = max(j-1, 0)
+        j_max = min(j+1, m) + 1
+        return np.sum(self.state[i_min:i_max, j_min:j_max]) - self.state[i, j]
