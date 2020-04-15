@@ -4,7 +4,7 @@ class GameOfLife(object):
 
     def __init__(self, init_state, cyclic=False):
         self._check_init_state(init_state)
-        self.state = init_state.astype(bool)
+        self.state = init_state.astype(int)
         self.cyclic = cyclic
 
     def _check_init_state(self, init_state):
@@ -22,8 +22,8 @@ class GameOfLife(object):
     def get_next_state(self):
         next_state = np.zeros(self.state.shape).astype(int)
         live_neighbours = self._get_live_neighbours_count()
-        ix_1 = ((live_neighbours == 2) | (live_neighbours == 3)) & (self.state)
-        ix_2 = (live_neighbours == 3) & (~self.state)
+        ix_1 = ((live_neighbours == 2) | (live_neighbours == 3)) & (self.state == 1)
+        ix_2 = (live_neighbours == 3) & (self.state == 0)
         next_state[ix_1 | ix_2] = 1
         return next_state
 
@@ -42,7 +42,7 @@ class GameOfLife(object):
     def _cell_live_neighbours_count_cyclic(self, i, j):
         n, m = self.state.shape
         values = 0
-        for a in range(i -1, i+2):
+        for a in range(i-1, i+2):
             for b in range(j-1, j+2):
                 values += self.state[a%n, b%m]
         return values - self.state[i, j]
