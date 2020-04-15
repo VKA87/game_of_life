@@ -2,20 +2,17 @@ from functools import partial
 
 from matplotlib import pyplot as plt
 from matplotlib.animation import FuncAnimation
-import numpy as np
-
-from .gol import GameOfLife
 
 
-def create_animation(init_state, interval=200, n_frames=1000):
+def create_animation(gol, interval=200, n_frames=1000):
     fig = plt.figure()
     plt.xticks([])
     plt.yticks([])
-    imax, jmax = init_state.shape
+    imax, jmax = gol.get_state().shape
     ax = plt.axes(xlim=(-0.5, imax + 0.5), ylim=(-0.5, jmax + 0.5))
     _add_border(ax, imax, jmax)
     patches = [[white_fill(i, j, ax) for i in range(imax)] for j in range(jmax)]
-    frame_func = partial(get_next_step, init_state=init_state)
+    frame_func = partial(get_next_step, gol=gol)
     anim = FuncAnimation(fig, partial(color_boxes, patches=patches), frames=frame_func,
                               interval=interval, blit=True, save_count=n_frames)
     return anim
@@ -45,8 +42,7 @@ def color_boxes(state, patches):
     return tuple(lst)
 
 
-def get_next_step(init_state):
-    gol = GameOfLife(init_state)
+def get_next_step(gol):
     while True:
         yield gol.get_state()
         gol.update_state()
