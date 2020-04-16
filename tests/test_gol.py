@@ -148,6 +148,6 @@ update_cyclic_args = [
 
 @pytest.mark.parametrize('init_state, expected', update_cyclic_args)
 def test_gol_cyclic_update_state(init_state, expected):
-    g= gol.GameOfLife(init_state, cyclic=True)
+    g = gol.GameOfLife(init_state, cyclic=True)
     g.update_state()
     assert np.allclose(g.get_state(), expected)
