@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from gol import gol
+from gameoflife import gol
 
 
 def test_gol_initial_state():
