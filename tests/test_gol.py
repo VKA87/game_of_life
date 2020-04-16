@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from gol.gol import GameOfLife
+from gol import gol
 
 
 def test_gol_initial_state():
@@ -9,8 +9,8 @@ def test_gol_initial_state():
         [1, 0, 1],
         [0, 1, 0],
         [0, 1, 0]])
-    gol = GameOfLife(init_state)
-    assert np.allclose(gol.get_state(), init_state)
+    g = gol.GameOfLife(init_state)
+    assert np.allclose(g.get_state(), init_state)
 
 
 def test_gol_raises_for_invalid_initial_state():
@@ -19,7 +19,7 @@ def test_gol_raises_for_invalid_initial_state():
         [0, 1, 0],
         [0, 10, 0]])
     with pytest.raises(ValueError):
-        GameOfLife(init_state)
+        gol.GameOfLife(init_state)
 
 
 args_number_of_live_cells = [(np.array([
@@ -38,8 +38,8 @@ def test_gol_number_of_live_cells(expected, cyclic):
         [1, 0, 1],
         [0, 1, 0],
         [0, 1, 0]])
-    gol = GameOfLife(init_state, cyclic=cyclic)
-    num_life_cells = gol._get_live_neighbours_count()
+    g = gol.GameOfLife(init_state, cyclic=cyclic)
+    num_life_cells = g._get_live_neighbours_count()
     assert np.allclose(num_life_cells, expected)
 
 
@@ -93,9 +93,9 @@ update_args = [
 
 @pytest.mark.parametrize('init_state, expected', update_args)
 def test_gol_update_state(init_state, expected):
-    gol = GameOfLife(init_state, cyclic=False)
-    gol.update_state()
-    assert np.allclose(gol.get_state(), expected)
+    g = gol.GameOfLife(init_state, cyclic=False)
+    g.update_state()
+    assert np.allclose(g.get_state(), expected)
 
 
 update_cyclic_args = [
@@ -148,6 +148,6 @@ update_cyclic_args = [
 
 @pytest.mark.parametrize('init_state, expected', update_cyclic_args)
 def test_gol_cyclic_update_state(init_state, expected):
-    gol = GameOfLife(init_state, cyclic=True)
-    gol.update_state()
-    assert np.allclose(gol.get_state(), expected)
+    g= gol.GameOfLife(init_state, cyclic=True)
+    g.update_state()
+    assert np.allclose(g.get_state(), expected)
